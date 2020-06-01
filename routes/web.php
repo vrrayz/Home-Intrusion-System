@@ -20,3 +20,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/security/dashboard', 'SecurityController@index')->name('security.home');
+Route::get('/security/register', 'Auth\RegisterController@showSecurityRegistrationForm')->name('security.register');
+Route::post('/security/register', 'Auth\RegisterController@securityRegister');

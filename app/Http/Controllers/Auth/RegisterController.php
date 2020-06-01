@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -69,5 +70,32 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+    public function showSecurityRegistrationForm()
+    { 
+        return view('auth.securityLogin');
+    }
+    public function securityRegister(Request $request){
+        // dd($this);
+        $request->validate([
+            'branch_name' => 'required|string|min:3|max:120|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'security_question' => 'required|string',
+            'security_answer' => 'required|string|min:2|max:100',
+            'security_key' => 'required|string|min:5|max:5',
+            'password' => 'required|string|min:8|max:20|confirmed',
+        ]);
+        $user = User::create([
+            'branch_name' => $request->branch_name,
+            'email' => $request->email,
+            'security_question' => $request->security_question,
+            'security_answer' => $request->security_answer,
+            // 'security_key' => $request->security_key,
+            'password' => Hash::make($request->password),
+            'user_role' => 'security',
+        ]);
+        $this->guard()->login($user);
+        return redirect('/security/dashboard');
+        // dd($request->all());
     }
 }
