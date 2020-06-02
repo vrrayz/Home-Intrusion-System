@@ -25,4 +25,6 @@ Route::get('/security/dashboard', 'SecurityController@index')->name('security.ho
 Route::get('/security/register', 'Auth\RegisterController@showSecurityRegistrationForm')->name('security.register');
 Route::post('/security/register', 'Auth\RegisterController@securityRegister');
 
-Route::get('/admin/generate_security_key','AdminController@generateSecurityKey');
+// Security Key Code Route(s)
+Route::get('/admin/generate_security_key', 'SecurityKeyCodeController@viewSecurityKeyGenerator')->name('admin.keygen');
+Route::post('/admin/generate_security_key', 'SecurityKeyCodeController@generateSecurityKey');
