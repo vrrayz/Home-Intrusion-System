@@ -10,7 +10,8 @@ class SecurityKeyCodeController extends Controller
     //
     public function viewSecurityKeyGenerator()
     {
-        return view('admin.securityKeyGenerator');
+        $securityKeyCode = SecurityKeyCode::all();
+        return view('admin.securityKeyGenerator')->with(['keyCodes' => $securityKeyCode]);
     }
     public function generateSecurityKey(Request $request)
     {

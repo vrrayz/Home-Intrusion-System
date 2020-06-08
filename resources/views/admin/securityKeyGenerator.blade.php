@@ -8,20 +8,47 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid mt-5">
         <div class="row">
             <div class="col-md-4 mx-auto">
                 <div class="card">
                     <div class="card-body text-center">
-                        {{-- @session('success')
+                        @if(session('success'))
                             <div class="alert alert-success">
-                                <p class="card-text">sdd</p>
+                                <p class="card-text">{{ session('success') }}</p>
                             </div>
-                        @endsession --}}
+                        @endif
                         <form action="{{ route('admin.keygen') }}" method="post">
                             @csrf
                             <button class="btn btn-primary btn-lg" type="submit">Generate Security Key Code</button>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Branch Name</th>
+                                    <th scope="col">Security Code</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($keyCodes as $keyCode)
+                                    <tr>
+                                        <th scope="row">{{$keyCode->id}}</th>
+                                        <td>{{($keyCode->user_id === NULL)?'None':$keyCode->user->branch_name}}</td>
+                                        <td>{{$keyCode->key_code}}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
