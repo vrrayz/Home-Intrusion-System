@@ -15,7 +15,7 @@ class SecurityKeyCodeController extends Controller
     }
     public function generateSecurityKey(Request $request)
     {
-        $rand_num = random_int(1000, 5000);
+        $rand_num = random_int(10000, 50000);
         $securityKeyCode = new SecurityKeyCode();
         $getSecurityKeyCodes = $securityKeyCode->where([['key_code',$rand_num]])->get();
         do {

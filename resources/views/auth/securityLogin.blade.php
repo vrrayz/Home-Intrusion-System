@@ -91,6 +91,11 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
+                                @if (session('err'))
+                                <span class="text-danger" role="alert">
+                                    <strong>{{ session('err') }}</strong>
+                                </span>
+                                @endif
                             </div>
                         </div>
 
