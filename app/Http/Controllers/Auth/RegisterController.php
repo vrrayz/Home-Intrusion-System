@@ -88,19 +88,23 @@ class RegisterController extends Controller
         ]);
         $securityKeyCode = SecurityKeyCode::where([['key_code',$request->security_key]]);
         if(count($securityKeyCode->get()) === 1){
-            $user = User::create([
-                'branch_name' => $request->branch_name,
-                'email' => $request->email,
-                'security_question' => $request->security_question,
-                'security_answer' => $request->security_answer,
-                // 'security_key' => $request->security_key,
-                'password' => Hash::make($request->password),
-                'user_role' => 'security',
-            ]);
-            $securityKeyCode->update([
-                'user_id' => $user->id
-            ]);
-            $this->guard()->login($user);
+            if($securityKeyCode->first()->user_id === null){
+                $user = User::create([
+                    'branch_name' => $request->branch_name,
+                    'email' => $request->email,
+                    'security_question' => $request->security_question,
+                    'security_answer' => $request->security_answer,
+                    // 'security_key' => $request->security_key,
+                    'password' => Hash::make($request->password),
+                    'user_role' => 'security',
+                ]);
+                $securityKeyCode->update([
+                    'user_id' => $user->id
+                ]);
+                $this->guard()->login($user);
+            }else{
+                return back()->with('err', 'Key Code Already Assigned')->withInput();
+            }
         }else{
             return back()->with('err','Incorrect Security Key')->withInput();
         }
