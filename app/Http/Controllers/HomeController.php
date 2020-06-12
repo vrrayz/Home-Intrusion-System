@@ -23,6 +23,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->user_role == 'security'){
+            return redirect('/security/dashboard');
+        }
         return view('home');
     }
 }
