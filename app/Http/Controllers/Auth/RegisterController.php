@@ -74,7 +74,7 @@ class RegisterController extends Controller
     }
     public function showSecurityRegistrationForm()
     { 
-        return view('auth.securityLogin');
+        return view('auth.securityRegister');
     }
     public function securityRegister(Request $request){
         // dd($this);
