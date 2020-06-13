@@ -49,7 +49,7 @@
                                 <div class="form-group row">
                                     <div class="col-md-12">
                                         <input id="name" type="text" class="form-control @error('middle_name') is-invalid @enderror" name="middle_name"
-                                            value="{{ old('middle_name') }}" required autocomplete="middle_name" autofocus>
+                                            value="{{ old('middle_name') }}" autocomplete="middle_name" autofocus>
                                 
                                         @error('middle_name')
                                         <span class="invalid-feedback" role="alert">
@@ -107,13 +107,18 @@
                                 <div class="form-group row">                                
                                     <div class="col-md-12">
                                         <input id="phone_number" type="text" class="form-control @error('phone_number') is-invalid @enderror"
-                                            name="phone_number" required autocomplete>
+                                            name="phone_number" value="{{ old('phone_number') }}" required autocomplete>
                                 
                                         @error('phone_number')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
+                                        @if(session('phone_err'))
+                                        <div class="text-danger text-center font-weight-bold">
+                                            <small>{{ session('phone_err') }}</small>
+                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -130,6 +135,11 @@
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
+                                        @if(session('age_err'))
+                                            <div class="text-danger text-center font-weight-bold">
+                                                <small>{{ session('age_err') }}</small>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

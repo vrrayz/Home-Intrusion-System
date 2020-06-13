@@ -51,13 +51,65 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        // dd(intval((time() - strtotime($data['date_of_birth']) ) / 31536000));
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'phone_number' => ['required', 'string', 'min:8','max:21'],
+            'date_of_birth' => ['required', 'string', 'min:10', 'max:10'],
+            'security_question' => ['required', 'string', 'max:255'],
+            'security_answer' => ['required', 'string', 'max:255'],
+            'gender' => ['required'],
         ]);
     }
+    public function register(Request $request){
+        // dd();
+        $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'phone_number' => ['required', 'string', 'min:8', 'max:21'],
+            'date_of_birth' => ['required', 'date', 'min:10', 'max:10'],
+            'security_question' => ['required', 'string', 'max:255'],
+            'security_answer' => ['required', 'string', 'max:255'],
+            'gender' => ['required'],
+        ]);
+        // Verify The Phone Number Format
+        $phoneNumberFormat = '/(\+?233|0)(55|54|24|20|50|27|57)\d{7}/';
+        $isPhoneCorrect = preg_match($phoneNumberFormat, $request->phone_number);
 
+        if($isPhoneCorrect == 1){
+            // Verify the Phone Number Format
+            $userAge = intval((time() - strtotime($request->date_of_birth)) / 31536000);
+            if($userAge >= 18 && $userAge <= 70){
+                return back()->withInput()->with(['age_err' => 'You must be within 18 to 70 years old']);
+            }else{
+                $user = User::create([
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'middle_name' => $request->middle_name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'phone_number' => $request->phone_number,
+                    'date_of_birth' => $request->date_of_birth,
+                    'security_question' => $request->security_question,
+                    'security_answer' => $request->security_answer,
+                    'gender' => $request->gender,
+                    'user_role' => 'end_user',
+                ]);
+                $this->guard()->login($user);
+                return redirect('/home');
+            }
+            // dd($isPhoneCorrect);
+        }else{
+            return back()->withInput()->with(['phone_err' => 'Incorrect Phone number format']);
+        }
+    }
     /**
      * Create a new user instance after a valid registration.
      *
@@ -66,6 +118,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        dd(explode('-',$data['date_of_birth']));
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
